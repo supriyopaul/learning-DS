@@ -49,10 +49,22 @@ class LinkedList(object):
         llist = []
         node = self.head
         for index in range(self.length):
+            print(node.value)
             llist.append(node.value)
             node = node.next
         return llist
 
+    def reverse(self):
+        first = self.head
+        self.tail = first
+        second = first.next
+        while second:
+            temp = second.next
+            second.next = first
+            first = second
+            second = temp
+        self.head.next = None
+        self.head = first
 
 obj = LinkedList(12)
 obj.append(24)
@@ -65,4 +77,6 @@ print(obj.display())
 obj.delete(3)
 print(obj.display())
 obj.delete(0)
+print(obj.display())
+obj.reverse()
 print(obj.display())
