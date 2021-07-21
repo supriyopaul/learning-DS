@@ -29,27 +29,21 @@ Constraints:
 -109 <= target <= 109
 Only one valid answer exists.
 
-
-Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
 '''
+class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        compliments = dict()
+        for index in range(len(nums)):
+            compliment = target - nums[index]
+            if compliments.get(compliment) is not None: return [compliments.get(compliment), index]
+            compliments[nums[index]] = index
+        print(compliments)
 
-def get_sum_index(arr, num):
-    for n in arr:
-        if (num - n) in arr: return arr.index(n), arr.index(num -n)
-
-def get_sum_index2(nums, target):
-    sorted_nums = sorted(nums)
-    left_index, right_index = 0, len(nums)-1
-    while not left_index == right_index:
-        summation = sorted_nums[left_index] + sorted_nums[right_index]
-        if summation == target:
-            return nums.index(sorted_nums[left_index]), nums.index(sorted_nums[right_index])
-        elif summation > target:
-            right_index = right_index - 1
-        elif summation < target:
-            left_index = left_index + 1
-        else:
-            return None, None
-
-print(get_sum_index([3,2,4], 6))
-print(get_sum_index2([3,2,4], 6))
+obj= Solution()
+print(obj.twoSum([3,2,4], 6))
+print(obj.twoSum([2,7,11,15], 9))
