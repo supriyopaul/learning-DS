@@ -1,4 +1,6 @@
 from typing import Optional
+from collections import deque
+
 # Definition for a binary tree node.
 class TreeNode:
      def __init__(self, val=0, left=None, right=None):
@@ -7,13 +9,22 @@ class TreeNode:
          self.right = right
 
 class Solution:
-    depth = 0
     def maxDepth(self, root: Optional[TreeNode]) -> int:
-        if not root:
-            return 0
-        left_depth = self.maxDepth(root.left)
-        right_depth = self.maxDepth(root.right)
-        return max(left_depth, right_depth) + 1
+        depth = 0
+        if not root: return depth
+        q = deque([root])
+        while q:
+            level_nodes = []
+            level_length = len(q)
+            for _ in range(level_length):
+                curr_root = q.popleft()
+                level_nodes.append(curr_root.val)
+                if curr_root.left is not None:
+                    q.append(curr_root.left)
+                if curr_root.right is not None:
+                    q.append(curr_root.right)
+            depth += 1
+        return depth
 
 
 if __name__ == "__main__":
