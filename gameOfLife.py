@@ -1,4 +1,5 @@
 from typing import List
+import copy
 
 class Solution:
 
@@ -6,22 +7,28 @@ class Solution:
         """
         Do not return anything, modify board in-place instead.
         """
-        board_copy = board.copy()
-        directions = [(-1, -1), (-1,0), (-1,1), (0,-1), (0,1), (1, -1), (1,0), (1,1)]
-        m = len(board)
-        n = len(board[0])
-        for i in range(m):
-            for j in range(n):
-                live_cells = 0
-            for direction in directions:
-                ni, nj = direction[0] + i, direction[1] + j
-                if (0 <= ni < m) and (0 <= nj < n) and board_copy[ni][nj] == 1:
-                    live_cells += 1
-            print(live_cells)
-            if board_copy[i][j] == 1 and (live_cells < 2 or live_cells > 3):
-                board[i][j] = 0
-            elif board_copy[i][j] == 0 and live_cells == 3:
-                board[i][j] = 1
+        board_copy = copy.deepcopy(board)
+        n = len(board_copy[0])
+        m = len(board_copy)
+        print(m, n)
+        #import pdb; pdb.set_trace()
+        directions = [[-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]]
+        live_neighbors = {}
+        for column in range(m):
+            for row in range(n):
+                if (column,row) not in live_neighbors:  live_neighbors[(column,row)] = 0
+                for direction in directions:
+                    neighbor_location = column+direction[0], row+direction[1]
+                    if 0 <= neighbor_location[0] < m and 0 <= neighbor_location[1] < n:
+                        print(neighbor_location)
+                        if board_copy[column+direction[0]][row+direction[1]] == 1:
+                            live_neighbors[(column,row)] += 1
+        print(live_neighbors)
+        for location, live_neighbor_count in live_neighbors.items():
+            if live_neighbor_count < 2: board[location[0]][location[1]] = 0
+            if 2 <= live_neighbor_count <= 3 and board_copy[location[0]][location[1]] == 1: board[location[0]][location[1]] == 1
+            if live_neighbor_count > 2: board[location[0]][location[1]] = 0
+            if live_neighbor_count == 3: board[location[0]][location[1]] = 1
         return board
 
 if __name__ == '__main__':
