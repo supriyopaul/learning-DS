@@ -6,35 +6,31 @@ class ListNode:
         self.val = val
         self.next = next
 
-def nodes2list(head: Optional[ListNode]) -> list:
-    if not head: return []
-    curr_node = head
-    result = []
-    while curr_node:
-        result.append(curr_node.val)
-        curr_node = curr_node.next if curr_node.next is not None else None
-    return result
+    def __iter__(self):
+        current = self
+        while current:
+            yield current.val
+            current = current.next
+
 
 class Solution:
-    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        if not head.next: return head.next
-        ll_len = len(nodes2list(head))
-        start_index = 0
-        end_index = 1
-        index_to_remove = ll_len - n
-        if index_to_remove == 0: return head.next
-        start_node = head
-        end_node = head.next
-        while end_node:
-            #import pdb; pdb.set_trace()
-            if not end_index == index_to_remove:
-                start_index = end_index
-                end_index += 1
-                start_node = end_node
-                end_node = end_node.next
-            else:
-                start_node.next = end_node.next
-                return head
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        fast = head
+        slow = head
+        # advance fast to nth position
+        for i in range(n):
+            fast = fast.next
+            
+        if not fast:
+            return head.next
+        # then advance both fast and slow now they are nth postions apart
+        # when fast gets to None, slow will be just before the item to be deleted
+        while fast.next:
+            slow = slow.next
+            fast = fast.next
+        # delete the node
+        slow.next = slow.next.next
+        return head
 
 if __name__ == "__main__":
     # head = [1,2,3,4,5], n = 2
@@ -43,6 +39,13 @@ if __name__ == "__main__":
     c = ListNode(val=3, next=b)
     d = ListNode(val=2, next=c)
     head  = ListNode(val=1, next=d)
-    print(nodes2list(head))
-    new_head = Solution().removeNthFromEnd(head, 2)
-    print(nodes2list(new_head))
+    Solution().removeNthFromEnd(head, 2)
+    print([node for node in head])
+
+    head  = ListNode(val=1)
+    new_head = Solution().removeNthFromEnd(head, 1)
+
+    head  = ListNode(val=1)
+    head.next = ListNode(val=2)
+    Solution().removeNthFromEnd(head, 2)
+    print([node for node in head])
